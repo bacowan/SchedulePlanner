@@ -1,0 +1,12 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+.area {
+    display: flex;
+    flex-direction: column;
+    margin: 1em;
+    gap: 1em;
+    max-width: 600px;
+}
