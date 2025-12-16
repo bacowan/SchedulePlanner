@@ -1,3 +1,49 @@
+const timeToMinutes = (timeStr) => {
+    const [hours, minutes] = timeStr.split(':').map(Number);
+    return hours * 60 + minutes;
+}
+
+const minutesToTime = (minutes) => {
+    const hours = Math.floor(minutes / 60) % 24;
+    const mins = minutes % 60;
+    return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
+}
+
+const formatTemplate = (template) => {
+    return JSON.stringify(template, null, 2);
+}
+
+const generateSchedule = (template, startTime, endTime) => {
+    try {
+        const parsedTemplate = JSON.parse(template);
+        const totalDefault = parsedTemplate.times.reduce((sum, item) => sum + item["default-length"], 0);
+        const startMinutes = timeToMinutes(startTime);
+        const endMinutes = timeToMinutes(endTime);
+        const totalActual = endMinutes - startMinutes;
+        
+        let current = startMinutes;
+        const output = [];
+        
+        for (const item of parsedTemplate.times) {
+            const actualLength = Math.round((item["default-length"] / totalDefault) * totalActual);
+            const itemStart = current;
+            const itemEnd = current + actualLength;
+            output.push(`${minutesToTime(itemStart)} - ${minutesToTime(itemEnd)} (${actualLength}分) ${item.description}`);
+            current = itemEnd;
+        }
+        
+        return output.join('\n') + '\n';
+    }
+    catch (e) {
+        if (e instanceof SyntaxError) {
+            return "Could not parse JSON template\n"
+        }
+        else {
+            return e.message + '\n'
+        }
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const select = document.getElementById('template-select');
     const templateTextarea = document.getElementById('template-textarea');
@@ -66,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    function setTimesFromTemplate(template) {
+    const setTimesFromTemplate = (template) => {
         startTimeInput.value = template["default-start"];
         const totalMinutes = template.times.reduce((sum, item) => sum + item["default-length"], 0);
         const [hours, minutes] = template["default-start"].split(':').map(Number);
@@ -77,48 +123,3 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-const formatTemplate = (template) => {
-    return JSON.stringify(template, null, 2);
-}
-
-const generateSchedule = (template, startTime, endTime) => {
-    try {
-        const parsedTemplate = JSON.parse(template);
-        const totalDefault = parsedTemplate.times.reduce((sum, item) => sum + item["default-length"], 0);
-        const startMinutes = timeToMinutes(startTime);
-        const endMinutes = timeToMinutes(endTime);
-        const totalActual = endMinutes - startMinutes;
-        
-        let current = startMinutes;
-        const output = [];
-        
-        for (const item of parsedTemplate.times) {
-            const actualLength = Math.round((item["default-length"] / totalDefault) * totalActual);
-            const itemStart = current;
-            const itemEnd = current + actualLength;
-            output.push(`${minutesToTime(itemStart)} - ${minutesToTime(itemEnd)} (${actualLength}分) ${item.description}`);
-            current = itemEnd;
-        }
-        
-        return output.join('\n') + '\n';
-    }
-    catch (e) {
-        if (e instanceof SyntaxError) {
-            return "Could not parse JSON template\n"
-        }
-        else {
-            return e.message + '\n'
-        }
-    }
-}
-
-const timeToMinutes = (timeStr) => {
-    const [hours, minutes] = timeStr.split(':').map(Number);
-    return hours * 60 + minutes;
-}
-
-const minutesToTime = (minutes) => {
-    const hours = Math.floor(minutes / 60) % 24;
-    const mins = minutes % 60;
-    return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
-}
