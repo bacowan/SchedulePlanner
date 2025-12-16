@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const generateButton = document.getElementById('generate-button');
     const startTimeInput = document.getElementById('start-time');
     const endTimeInput = document.getElementById('end-time');
+    const copyButton = document.getElementById('copy-button');
+    const copyMessage = document.getElementById('copy-message');
 
     // Templates are loaded via templates.js
     const templates = window.templates;
@@ -42,6 +44,26 @@ document.addEventListener('DOMContentLoaded', function() {
             templateTextarea.value,
             startTimeInput.value,
             endTimeInput.value);
+    });
+
+    // On copy button click, copy to clipboard
+    copyButton.addEventListener('click', function() {
+        navigator.clipboard.writeText(outputTextarea.value).then(() => {
+            copyMessage.textContent = 'Copied!';
+            copyMessage.style.display = 'inline';
+            setTimeout(() => {
+                copyMessage.style.display = 'none';
+            }, 1000);
+        }).catch(err => {
+            console.error('Failed to copy: ', err);
+            copyMessage.textContent = 'Copy failed';
+            copyMessage.style.display = 'inline';
+            copyMessage.style.color = 'red';
+            setTimeout(() => {
+                copyMessage.style.display = 'none';
+                copyMessage.style.color = 'green';
+            }, 1000);
+        });
     });
 
     function setTimesFromTemplate(template) {
