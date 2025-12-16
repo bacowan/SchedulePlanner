@@ -20,14 +20,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // Load the default selected template
     const defaultSelected = select.value;
     if (defaultSelected && templates[defaultSelected]) {
-        templateTextarea.value = formatTemplate(templates[defaultSelected]);
+        templateTextarea.value = JSON.stringify(templates[defaultSelected], null, 2);
+        setTimesFromTemplate(templates[defaultSelected]);
     }
 
     // On select change, load template content
     select.addEventListener('change', function() {
         const selected = select.value;
         if (selected && templates[selected]) {
-            templateTextarea.value = formatTemplate(templates[selected]);
+            templateTextarea.value = JSON.stringify(templates[selected], null, 2);
+            setTimesFromTemplate(templates[selected]);
         } else {
             templateTextarea.value = '';
         }
@@ -41,6 +43,16 @@ document.addEventListener('DOMContentLoaded', function() {
             startTimeInput.value,
             endTimeInput.value);
     });
+
+    function setTimesFromTemplate(template) {
+        startTimeInput.value = template["default-start"];
+        const totalMinutes = template.times.reduce((sum, item) => sum + item["default-length"], 0);
+        const [hours, minutes] = template["default-start"].split(':').map(Number);
+        const totalMins = hours * 60 + minutes + totalMinutes;
+        const endHours = Math.floor(totalMins / 60) % 24;
+        const endMinutes = totalMins % 60;
+        endTimeInput.value = `${endHours.toString().padStart(2,'0')}:${endMinutes.toString().padStart(2,'0')}`;
+    }
 });
 
 const formatTemplate = (template) => {
