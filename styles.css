@@ -3,10 +3,33 @@
     margin: 0;
 }
 
+body {
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+.left, .right {
+    flex: 1;
+    padding: 1em;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
 .area {
     display: flex;
     flex-direction: column;
-    margin: 1em;
     gap: 1em;
-    max-width: 600px;
+    flex: 1;
+}
+
+textarea {
+    width: 100%;
+    box-sizing: border-box;
+    flex: 1;
+    resize: none;
 }

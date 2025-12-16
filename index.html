@@ -10,30 +10,36 @@
     <title>Schedule Planner</title>
 </head>
 <body>
-    <h1>Schedule Planner</h1>
-    <h2>Settings</h2>
-    <form class="area">
-        <label>
-            Template:
-            <select id="template-select">
-            </select>
-        </label>
-        <textarea id="template-textarea" rows="30" cols="40"></textarea>
-        <label>
-            Start Time:
-            <input id="start-time" type="time"/>
-            </label>
-        <label>
-            End Time:
-            <input id="end-time" type="time"/>
-        </label>
-        <button id="generate-button">Generate</button>
-    </form>
-    <h2>Output</h2>
-    <div class="area">
-        <button id="copy-button">Copy</button>
-        <span id="copy-message" style="display: none; color: green; margin-left: 10px;"></span>
-        <textarea readonly id="output-textarea" rows="30" cols="40"></textarea>
+    <div class="container">
+        <div class="left">
+            <h1>Schedule Planner</h1>
+            <h2>Settings</h2>
+            <div class="area">
+                <label>
+                    Template:
+                    <select id="template-select">
+                    </select>
+                </label>
+                <textarea id="template-textarea" readonly></textarea>
+                <label>
+                    Start Time:
+                    <input id="start-time" type="time"/>
+                    </label>
+                <label>
+                    End Time:
+                    <input id="end-time" type="time"/>
+                </label>
+                <button id="generate-button">Generate</button>
+            </div>
+        </div>
+        <div class="right">
+            <h2>Output</h2>
+            <div class="area">
+                <button id="copy-button">Copy</button>
+                <span id="copy-message" style="display: none; color: green; margin-left: 10px;"></span>
+                <textarea readonly id="output-textarea"></textarea>
+            </div>
+        </div>
     </div>
 </body>
 </html>
