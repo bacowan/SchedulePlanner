@@ -36,14 +36,29 @@ document.addEventListener('DOMContentLoaded', function() {
     // On generate button click, add text to output
     generateButton.addEventListener('click', function(event) {
         event.preventDefault();
-        const startTime = startTimeInput.value;
-        const endTime = endTimeInput.value;
-        const template = templateTextarea.value;
-        // Simple generation: just append some text
-        outputTextarea.value += `\nGenerated schedule from ${startTime} to ${endTime} using template:\n${template}\n`;
+        outputTextarea.value += generateSchedule(
+            templateTextarea.value,
+            startTimeInput.value,
+            endTimeInput.value);
     });
 });
 
 const formatTemplate = (template) => {
     return JSON.stringify(template, null, 2);
+}
+
+const generateSchedule = (template, startTime, endTime) => {
+    try {
+        const parsedTemplate = JSON.parse(template);
+        
+        return template;
+    }
+    catch (e) {
+        if (e instanceof SyntaxError) {
+            return "Could not parse JSON template"
+        }
+        else {
+            return e.message
+        }
+    }
 }
